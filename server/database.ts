@@ -1,10 +1,10 @@
-import {URLS} from "./realfin";
+import {getRealFin} from "./realfin";
 
 export namespace Database {
     export function GetUrls(obj: {kind: string}) {
         return new Promise(function (resolve, reject) {
             setTimeout(() => {
-                const urls = URLS.split('\n');
+                const urls = getRealFin().split('\n');
                 resolve(urls)
             }, 500)
         })

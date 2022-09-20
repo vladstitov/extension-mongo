@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 let initialized;
 let logger;
 let errors;
@@ -58,12 +56,13 @@ function saveHtml(data) {
     }).then(console.log).catch(console.log);
 }
 function getUrls(data) {
-    $.ajax({
+    return $.ajax({
         type: 'POST',
         url: 'http://localhost/db/GetUrls',
         data: JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         dataType: "json"
-    }).then(console.log).catch(console.log);
+    });
 }
+getUrls({ kind: 'realfin' }).then(console.log);
 //# sourceMappingURL=contentscript.js.map

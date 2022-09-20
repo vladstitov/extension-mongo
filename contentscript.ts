@@ -1,5 +1,3 @@
-import {Realfin} from "./libs/realfin";
-
 let initialized: boolean;
 let logger: JQuery;
 let errors: JQuery
@@ -58,8 +56,9 @@ function insertLogger() {
 const interval = setInterval(() => {
     console.log('tick');
     insertLogger();
-
 }, 5000);
+
+
 
 
 
@@ -74,12 +73,17 @@ function saveHtml(data: {url: string, key: string, kind: string,  html: string})
 }
 
 
+
+
 function getUrls(data: {kind: string}) {
-    $.ajax({
+    return $.ajax({
         type: 'POST',
         url: 'http://localhost/db/GetUrls',
         data: JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         dataType: "json"
-    }).then(console.log).catch(console.log)
+    })
 }
+
+
+getUrls({kind:'realfin'}).then(console.log)
