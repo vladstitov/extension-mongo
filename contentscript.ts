@@ -4,7 +4,6 @@ let initialized: boolean;
 let logger: JQuery;
 let errors: JQuery
 let current: JQuery
-let controller;
 
 async function wait(sec: number) {
     return new Promise(function (resolve, reject) {
@@ -44,8 +43,7 @@ function insertLogger() {
     $('head').append(style);
     logger = $('<div class="logger">')
     logger.on('click', function (evt) {
-        controller.standby = !controller.standby;
-        console.log('STADBY ' + controller.standby);
+
     })
     $('body').append(logger)
     errors = $('<div class="errors">')
@@ -57,31 +55,31 @@ function insertLogger() {
 }
 
 
-function isRightUrl() {
-    const url = document.location.href;
-    if(url.indexOf('realfin') !== -1) return true
-    return false;
+const interval = setInterval(() => {
+    console.log('tick');
+    insertLogger();
+
+}, 5000);
+
+
+
+function saveHtml(data: {url: string, key: string, kind: string,  html: string}) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost/db/SaveHtml',
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).then(console.log).catch(console.log)
 }
 
 
-const interval = setInterval(() => {
-    console.log('tick');
-    if(!isRightUrl()) {
-        console.log(' WRONG URL')
-        clearInterval(interval);
-    } else {
-        if(!controller) {
-            console.log('INIT ')
-            controller =  new Realfin()
-            insertLogger();
-            sendMessageFromContent({status:'INIT', data: null})
-        } else controller.tick()
-
-
-
-    }
-    /*sendMassageBack({task: 'tick', params: Date.now()},function (r) {
-        if(!r) connected = false;
-        console.log('response', r);
-    })*!/*/
-}, 5000);
+function getUrls(data: {kind: string}) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost/db/GetUrls',
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).then(console.log).catch(console.log)
+}

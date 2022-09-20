@@ -1,11 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const realfin_1 = require("./libs/realfin");
 let initialized;
 let logger;
 let errors;
 let current;
-let controller;
 async function wait(sec) {
     return new Promise(function (resolve, reject) {
         setTimeout(() => {
@@ -37,8 +35,6 @@ function insertLogger() {
     $('head').append(style);
     logger = $('<div class="logger">');
     logger.on('click', function (evt) {
-        controller.standby = !controller.standby;
-        console.log('STADBY ' + controller.standby);
     });
     $('body').append(logger);
     errors = $('<div class="errors">');
@@ -48,31 +44,26 @@ function insertLogger() {
     logger.append(current);
     logger.append(errors);
 }
-function isRightUrl() {
-    const url = document.location.href;
-    if (url.indexOf('realfin') !== -1)
-        return true;
-    return false;
-}
 const interval = setInterval(() => {
     console.log('tick');
-    if (!isRightUrl()) {
-        console.log(' WRONG URL');
-        clearInterval(interval);
-    }
-    else {
-        if (!controller) {
-            console.log('INIT ');
-            controller = new realfin_1.Realfin();
-            insertLogger();
-            sendMessageFromContent({ status: 'INIT', data: null });
-        }
-        else
-            controller.tick();
-    }
-    /*sendMassageBack({task: 'tick', params: Date.now()},function (r) {
-        if(!r) connected = false;
-        console.log('response', r);
-    })*!/*/
+    insertLogger();
 }, 5000);
+function saveHtml(data) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost/db/SaveHtml',
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).then(console.log).catch(console.log);
+}
+function getUrls(data) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost/db/GetUrls',
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).then(console.log).catch(console.log);
+}
 //# sourceMappingURL=contentscript.js.map
